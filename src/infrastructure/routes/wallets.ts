@@ -2,14 +2,15 @@ import express, { Request, Response } from "express";
 
 const router = express.Router();
 
-router.get("/wallets/{wallet-id}", (req: Request, res: Response) => {
-  const walletId = req.params["wallet-id"];
+console.log("a");
+
+router.get("/wallets/:walletid", (req: Request, res: Response) => {
+  const walletId = req.params["walletid"];
   // if wallet not found, return 404
   // if wallet found, return wallet (latest transation id, version, coins), return 200(OK)
-
   throw new Error("Not implemented");
 });
-router.post("/wallets/{wallet-id}/credit", (req: Request, res: Response) => {
+router.post("/wallets/:walletid/credit", (req: Request, res: Response) => {
   const walletId = req.params["wallet-id"];
   const transactionId = req.body.transactionId;
   const coins = req.body.coins;
@@ -19,7 +20,7 @@ router.post("/wallets/{wallet-id}/credit", (req: Request, res: Response) => {
 
   throw new Error("Not implemented");
 });
-router.post("/wallets/{wallet-id}/debit", (req: Request, res: Response) => {
+router.post("/wallets/:walletid/debit", (req: Request, res: Response) => {
   const walletId = req.params["wallet-id"];
   const transactionId = req.body.transactionId;
   const coins = req.body.coins;
