@@ -13,10 +13,23 @@ export default async (
       status: 400,
     });
   }
-  // tried without try catch block, no success, the wallet.transactionID == transactionID check caused some problems.
-  try {
-    const wallet: WalletState = await walletRepository.getWalletByID(walletID);
-    if (wallet.transactionID == transactionID) {
+
+  const currentWalletState: WalletState | null =
+    await walletRepository.getWalletByID(walletID);
+
+  if (currentWalletState == null) {
+    const newWalletState: WalletState = {
+      walletID: walletID,
+      amount: amount,
+      transactionID: transactionID,
+      transactionType: TransactionType.CREDIT,
+      balance: amount,
+      version: 1,
+    };
+    walletRepository.saveWalletState(newWalletState);
+    return Promise.resolve(newWalletState);
+  } else {
+    if (currentWalletState.transactionID == transactionID) {
       return Promise.reject({
         message: "Transaction already exists",
         status: 202,
@@ -28,21 +41,10 @@ export default async (
       amount: amount,
       transactionID: transactionID,
       transactionType: TransactionType.CREDIT,
-      balance: wallet.balance + amount,
-      version: wallet.version + 1,
+      balance: currentWalletState.balance + amount,
+      version: currentWalletState.version + 1,
     };
 
-    walletRepository.saveWalletState(newWalletState);
-    return Promise.resolve(newWalletState);
-  } catch {
-    const newWalletState: WalletState = {
-      walletID: walletID,
-      amount: amount,
-      transactionID: transactionID,
-      transactionType: TransactionType.CREDIT,
-      balance: amount,
-      version: 1,
-    };
     walletRepository.saveWalletState(newWalletState);
     return Promise.resolve(newWalletState);
   }

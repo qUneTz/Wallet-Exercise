@@ -1,12 +1,12 @@
 import IWalletRepository from "../model/IWalletRepository.js";
 import { WalletState, TransactionType } from "../model/WalletState.js";
 
-export default async function (
+export default async (
   walletID: string,
   amount: number,
   transactionID: string,
   walletRepository: IWalletRepository
-): Promise<WalletState> {
+): Promise<WalletState> => {
   if (amount < 0) {
     return Promise.reject({
       message: "Amount cannot be negative",
@@ -16,7 +16,7 @@ export default async function (
 
   const currentWalletState = await walletRepository.getWalletByID(walletID);
 
-  if (currentWalletState == undefined) {
+  if (currentWalletState == null) {
     return Promise.reject({ message: "Wallet not found", status: 404 });
   }
   if (currentWalletState.balance < amount) {
@@ -37,4 +37,4 @@ export default async function (
   await walletRepository.saveWalletState(newWalletState);
 
   return Promise.resolve(newWalletState);
-}
+};
