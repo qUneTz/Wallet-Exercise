@@ -26,14 +26,14 @@ export default async function (
     return Promise.reject({ message: "Request was accepted", status: 202 });
   }
 
-  const newWalletState = new WalletState(
-    walletID,
-    amount,
-    transactionID,
-    TransactionType.DEBIT,
-    currentWalletState.balance - amount,
-    currentWalletState.version + 1
-  );
+  const newWalletState: WalletState = {
+    walletID: walletID,
+    amount: amount,
+    transactionID: transactionID,
+    transactionType: TransactionType.DEBIT,
+    balance: currentWalletState.balance - amount,
+    version: currentWalletState.version + 1,
+  };
   await walletRepository.saveWalletState(newWalletState);
 
   return Promise.resolve(newWalletState);
