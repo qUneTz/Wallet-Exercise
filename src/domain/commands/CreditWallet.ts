@@ -1,6 +1,8 @@
 import IWalletRepository from "../model/IWalletRepository.js";
 import { WalletState, TransactionType } from "../model/WalletState.js";
 
+import { InvalidAmountError, TransactionAlreadyAcceptedError } from "../WalletErrors.js";
+
 export default async (
   walletID: string,
   amount: number,
@@ -8,14 +10,10 @@ export default async (
   walletRepository: IWalletRepository
 ): Promise<WalletState> => {
   if (amount < 0) {
-    return Promise.reject({
-      message: "Amount cannot be negative",
-      status: 400,
-    });
+    return Promise.reject(new InvalidAmountError());
   }
 
-  const currentWalletState: WalletState | null =
-    await walletRepository.getWalletByID(walletID);
+  const currentWalletState: WalletState | null = await walletRepository.getWalletByID(walletID);
 
   if (currentWalletState == null) {
     const newWalletState: WalletState = {
@@ -30,10 +28,7 @@ export default async (
     return Promise.resolve(newWalletState);
   } else {
     if (currentWalletState.transactionID == transactionID) {
-      return Promise.reject({
-        message: "Transaction already exists",
-        status: 202,
-      });
+      return Promise.reject(new TransactionAlreadyAcceptedError());
     }
 
     const newWalletState: WalletState = {
