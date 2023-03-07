@@ -13,7 +13,7 @@ export default async (
   transactionID: string,
   walletRepository: IWalletRepository
 ): Promise<WalletState> => {
-  const currentWalletState = await walletRepository.getWalletByID(walletID);
+  const currentWalletState: WalletState | null = await walletRepository.getWalletByID(walletID);
 
   if (amount < 0) {
     return Promise.reject(new InvalidAmountError());
@@ -37,6 +37,5 @@ export default async (
     version: currentWalletState.version + 1,
   };
   await walletRepository.saveWalletState(newWalletState);
-
   return Promise.resolve(newWalletState);
 };

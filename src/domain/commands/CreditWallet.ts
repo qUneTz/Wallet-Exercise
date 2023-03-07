@@ -24,7 +24,7 @@ export default async (
       balance: amount,
       version: 1,
     };
-    walletRepository.saveWalletState(newWalletState);
+    await walletRepository.saveWalletState(newWalletState);
     return Promise.resolve(newWalletState);
   } else {
     if (currentWalletState.transactionID == transactionID) {
@@ -40,7 +40,7 @@ export default async (
       version: currentWalletState.version + 1,
     };
 
-    walletRepository.saveWalletState(newWalletState);
+    await walletRepository.saveWalletState(newWalletState);
     return Promise.resolve(newWalletState);
   }
 };
