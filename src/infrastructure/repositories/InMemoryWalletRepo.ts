@@ -8,9 +8,7 @@ export default class InMemoryWalletRepo implements IWalletRepository {
     if (this._walletTransactions.get(walletID) != undefined) {
       const walletTransactions = this._walletTransactions.get(walletID);
       if (walletTransactions?.length) {
-        return Promise.resolve(
-          walletTransactions[walletTransactions.length - 1] as WalletState
-        );
+        return Promise.resolve(walletTransactions[walletTransactions.length - 1] as WalletState);
       }
     }
     return Promise.resolve(null);
