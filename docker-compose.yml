@@ -11,6 +11,15 @@ services:
     volumes:
       - .:/usr/src/app
 
+  flyway:
+    container_name: flyway
+    image: flyway/flyway
+    command: -url=jdbc:postgresql://postgres:5432/${POSTGRESQL_DATABASE} -schemas=wallet_api -user=${POSTGRESQL_USER} -password=${POSTGRESQL_PASSWORD} migrate
+    volumes:
+      - .:/flyway/sql
+    depends_on:
+      - db
+
   db:
     container_name: postgres
     image: postgres
